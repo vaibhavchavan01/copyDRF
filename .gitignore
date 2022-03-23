@@ -1,0 +1,14 @@
+#env
+/myenv/*
+
+
+# Database
+db.sqlite3
+
+# Database
+db.sqlite3
+
+# Visual Studio
+.vscode/
+.history/
+*.code-workspace
