@@ -1,33 +1,42 @@
-from django.shortcuts import redirect
 from rest_framework import serializers
 from .models import Artist, Genre, Movie, MovieArtist, User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import make_password
+from rest_framework.serializers import ValidationError
 from .backends import CustomBackend
 from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):    
     password = serializers.CharField(max_length=200)
-    print('password',password)
-    def create(self, validated_data):
-            return User.objects.create(**validated_data)
-    def validate_password(self, password):
-        password= make_password(password) 
-        return password
     class Meta:
         model = User
         fields = ['id', 'firstname', 'lastname', 'email','mobile','password', 'is_staff', 'is_superuser', 'is_active']
-        
-class RegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'mobile','password')
-        extra_kwargs = {'password': {'write_only': True}}
+       
+    def validate_password(self, password):
+        return make_password(password) 
 
-    def create(self, validated_data):
-        user = User.objects.create_user(validated_data['email'], validated_data['mobile'], validated_data['password'])
-        return user
+    def validate_mobile(self, mobile):
+        if len(str(mobile))!=10:
+            raise ValidationError("Mobile Number Must Be 10 Digit")
+        return mobile
+
+    def validate_email(self, email):
+        if '@' not in str(email):
+            raise ValidationError("invalid email")
+        return email
+
+
+# class RegisterSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ('id', 'email', 'mobile','password')
+#         extra_kwargs = {'password': {'write_only': True}}
+
+#     def create(self, validated_data):
+#         print('validated_data:',validated_data)
+#         user = User.objects.create_user(validated_data['email'], validated_data['mobile'], validated_data['password'])
+#         return user
         
 class LoginSerializer(serializers.ModelSerializer):
     # email = serializers.CharField(max_length=50)

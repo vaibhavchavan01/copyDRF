@@ -1,4 +1,4 @@
-from .base import *
+# from .base import *
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -9,5 +9,6 @@ SECRET_KEY = 'ucdafyxxh@g$f9mywzv$qssx20^70)8sgol*1v339eqi@^4%'
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
 

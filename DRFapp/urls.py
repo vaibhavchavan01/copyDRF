@@ -1,6 +1,3 @@
-from argparse import Namespace
-from posixpath import basename
-from unicodedata import name
 from django.db import router
 from django.urls import path, include
 # from rest_framework.routers import DefaultRouter
@@ -15,7 +12,7 @@ from DRFapp import views
 urlpatterns = [  
     path('register/', SignUpAPI.as_view(), name= 'register'),
     path('login/', SignInAPI.as_view(), name='login'),
-    path('logout/',knox_views.LogoutView.as_view(), name="knox-logout"),  
+    path('logout/',knox_views.LogoutView.as_view(), name="logout"),  
     path('userdetail/',views.UserAPIView.as_view()),
     path('userdetail/<int:pk>/',views.UserAPIView.as_view()),
     path('genre/',views.GenreAPIView.as_view()),
