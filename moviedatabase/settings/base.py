@@ -13,17 +13,15 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 
-from datetime import timedelta
-from rest_framework.settings import api_settings
-# REST_KNOX = {
-#   'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
-#   'AUTH_TOKEN_CHARACTER_LENGTH': 64,
-#   'TOKEN_TTL': timedelta(hours=10),
-#   'USER_SERIALIZER': 'knox.serializers.UserSerializer',
-#   'TOKEN_LIMIT_PER_USER': None,
-#   'AUTO_REFRESH': False,
-# #   'EXPIRY_DATETIME_FORMAT': api_settings.DATETME_FORMAT,
-# }
+try:
+    from .development import *
+
+except ImportError:
+    from .production import *
+
+# from datetime import timedelta
+# from rest_framework.settings import api_settings
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -43,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
+    'django_filters',
+    # 'rest_framework.authtoken',
     'DRFapp',
     'knox',
 ]
@@ -86,13 +85,22 @@ WSGI_APPLICATION = 'moviedatabase.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'moviedatabase',
+        'USER': 'vaibhav',
+        'PASSWORD': 'vc',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
 
 
 # Password validation
@@ -146,5 +154,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':['knox.auth.TokenAuthentication'],
     # 'DEFAULT_AUTHENTICATION_CLASSES':['rest_framework.authentication.TokenAuthentication'],
     # 'DEFAULT_PERMISSION_CLASSES':['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
-    
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+
 }

@@ -1,8 +1,10 @@
+import email
 from django.db import models
 from datetime import timedelta
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from .custommanager import CustomUserManager
+import uuid
 
 # Create your models here.
 
@@ -20,21 +22,24 @@ from .custommanager import CustomUserManager
 #     REQUIRED_FIELDS = []
 
 class User(AbstractUser):
+    # id = models.BigAutoField(primary_key=True)
     firstname = models.CharField(max_length=20, null=True)
     lastname = models.CharField(max_length=20, null=True)
     mobile = models.CharField(max_length=13, unique=True)
     password = models.CharField(_('password'),max_length=200, null= False, blank= False)
-    confirm_password = (models.CharField(max_length=200, null = True))
-    username = None
+    confirm_password = (models.CharField(max_length=200, null = False, blank= True))
+    username =None
     email = models.EmailField(_('email address'), unique=True)
     USERNAME_FIELD = 'email' or 'mobile'
     REQUIRED_FIELDS = ['mobile','password','firstname','lastname']
+    def __str__(self):
+        return self.email
 
     objects = CustomUserManager()
 
     
 class Genre(models.Model):
-    name = models.CharField(max_length=20, null= True)
+    name = models.CharField(max_length=20, null=False)
 
     def __str__(self):
         return self.name 
